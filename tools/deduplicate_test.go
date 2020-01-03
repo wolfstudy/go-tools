@@ -16,15 +16,19 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-package test
+package tools
 
 import (
-    `github.com/apache/pulsar/pulsar-client-go/logutil`
+    `fmt`
+    `github.com/stretchr/testify/assert`
     `testing`
 )
 
-func TestLogUtil(t *testing.T) {
-    logutil.Infof("The log info level")
-    // output as follows:
-    // 2020/01/03 15:43:08.975 log_test.go:27: [info] The log info level
+func TestDeduplicate(t *testing.T) {
+    dedupSlice := []string{"apple", "banana", "cherry", "cherry"}
+    newSlice := Deduplicate(dedupSlice)
+    fmt.Println(newSlice)
+
+    exceptSlice := []string{"apple", "banana", "cherry"}
+    assert.Equal(t, exceptSlice, newSlice)
 }
