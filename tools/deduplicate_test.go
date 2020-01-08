@@ -18,63 +18,63 @@
 package tools
 
 import (
-    "fmt"
-    "github.com/stretchr/testify/assert"
-    `github.com/wolfstudy/go-tools/context`
-    `gopkg.in/yaml.v2`
-    `io/ioutil`
-    `log`
-    `os`
-    `path/filepath`
-    "testing"
+	"fmt"
+	"github.com/stretchr/testify/assert"
+	"github.com/wolfstudy/go-tools/context"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"log"
+	"os"
+	"path/filepath"
+	"testing"
 )
 
 func TestDeduplicate(t *testing.T) {
-    dedupSlice := []string{"apple", "banana", "cherry", "cherry"}
-    newSlice := Deduplicate(dedupSlice)
-    fmt.Println(newSlice)
+	dedupSlice := []string{"apple", "banana", "cherry", "cherry"}
+	newSlice := Deduplicate(dedupSlice)
+	fmt.Println(newSlice)
 
-    exceptSlice := []string{"apple", "banana", "cherry"}
-    assert.Equal(t, exceptSlice, newSlice)
+	exceptSlice := []string{"apple", "banana", "cherry"}
+	assert.Equal(t, exceptSlice, newSlice)
 }
 
 type Config struct {
-    Kind           string `yaml:"kind,omitempty"`
-    APIVersion     string `yaml:"apiVersion,omitempty"`
-    CurrentContext string `yaml:"current-context"`
+	Kind           string `yaml:"kind,omitempty"`
+	APIVersion     string `yaml:"apiVersion,omitempty"`
+	CurrentContext string `yaml:"current-context"`
 }
 
 // operation yaml file
 func TestReadFile(t *testing.T) {
-    conf := &Config{
-        Kind:           "aaa",
-        APIVersion:     "bbb",
-        CurrentContext: "ccc",
-    }
-    home := context.HomeDir()
-    err := WriteToFile(conf, home + "/github.com/wolfstudy/go-tools/tools/config")
-    if err != nil {
-        log.Fatal(err)
-    }
+	conf := &Config{
+		Kind:           "aaa",
+		APIVersion:     "bbb",
+		CurrentContext: "ccc",
+	}
+	home := context.HomeDir()
+	err := WriteToFile(conf, home+"/github.com/wolfstudy/go-tools/tools/config")
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func WriteToFile(obj interface{}, filename string) error {
-    out, err := yaml.Marshal(obj.(*Config))
-    if err != nil {
-        log.Fatalf("err: %v", err)
-    }
-    if err != nil {
-        return err
-    }
-    dir := filepath.Dir(filename)
-    if _, err := os.Stat(dir); os.IsNotExist(err) {
-        if err = os.MkdirAll(dir, 0755); err != nil {
-            return err
-        }
-    }
+	out, err := yaml.Marshal(obj.(*Config))
+	if err != nil {
+		log.Fatalf("err: %v", err)
+	}
+	if err != nil {
+		return err
+	}
+	dir := filepath.Dir(filename)
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		if err = os.MkdirAll(dir, 0755); err != nil {
+			return err
+		}
+	}
 
-    if err := ioutil.WriteFile(filename, out, 0600); err != nil {
-        return err
-    }
-    return nil
+	if err := ioutil.WriteFile(filename, out, 0600); err != nil {
+		return err
+	}
+	return nil
 }
